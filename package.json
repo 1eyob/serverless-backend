@@ -1,0 +1,36 @@
+{
+  "name": "serverless-backend",
+  "version": "1.0.0",
+  "description": "Serverless CRUD API with AWS Lambda and DynamoDB",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "serverless deploy --verbose",
+    "deploy:dev": "serverless deploy --stage dev --verbose",
+    "deploy:prod": "serverless deploy --stage prod --verbose",
+    "remove": "serverless remove",
+    "remove:dev": "serverless remove --stage dev",
+    "remove:prod": "serverless remove --stage prod",
+    "logs:create": "serverless logs -f create --tail",
+    "logs:read": "serverless logs -f readAll --tail",
+    "logs:update": "serverless logs -f update --tail",
+    "logs:delete": "serverless logs -f delete --tail",
+    "info": "serverless info --verbose",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "serverless",
+    "aws",
+    "lambda",
+    "dynamodb",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1691.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "serverless": "^3.38.0"
+  }
+}

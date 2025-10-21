@@ -1,0 +1,115 @@
+service: serverless-backend
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'}
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${self:provider.stage}
+    STAGE: ${self:provider.stage}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+  logs:
+    restApi: true
+  tracing:
+    lambda: true
+    apiGateway: true
+
+functions:
+  create:
+    handler: handler/create.handler
+    events:
+      - http:
+          path: items
+          method: post
+          cors: true
+
+  readAll:
+    handler: handler/readAll.handler
+    events:
+      - http:
+          path: items
+          method: get
+          cors: true
+
+  readOne:
+    handler: handler/readOne.handler
+    events:
+      - http:
+          path: items/{id}
+          method: get
+          cors: true
+
+  update:
+    handler: handler/update.handler
+    events:
+      - http:
+          path: items/{id}
+          method: put
+          cors: true
+
+  delete:
+    handler: handler/delete.handler
+    events:
+      - http:
+          path: items/{id}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    ItemsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        PointInTimeRecoverySpecification:
+          PointInTimeRecoveryEnabled: true
+        Tags:
+          - Key: Environment
+            Value: ${self:provider.stage}
+          - Key: Service
+            Value: ${self:service}
+
+  Outputs:
+    ApiGatewayRestApiUrl:
+      Description: API Gateway endpoint URL
+      Value:
+        Fn::Join:
+          - ""
+          - - "https://"
+            - Ref: ApiGatewayRestApi
+            - ".execute-api."
+            - ${self:provider.region}
+            - ".amazonaws.com/"
+            - ${self:provider.stage}
+
+    DynamoDBTableName:
+      Description: DynamoDB Table Name
+      Value: ${self:provider.environment.DYNAMODB_TABLE}
+
+    DynamoDBTableArn:
+      Description: DynamoDB Table ARN
+      Value:
+        Fn::GetAtt:
+          - ItemsTable
+          - Arn
