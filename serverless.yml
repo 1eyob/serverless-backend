@@ -22,11 +22,11 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
-  logs:
-    restApi: true
+  # logs:
+  #   restApi: true
   tracing:
     lambda: true
-    apiGateway: true
+    # apiGateway: true
 
 functions:
   create:
