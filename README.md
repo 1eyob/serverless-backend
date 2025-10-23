@@ -2,7 +2,7 @@
 
 A production-ready Serverless Framework REST API built on AWS, featuring full CRUD operations with Lambda, API Gateway, and DynamoDB.
 
-## 🏗️ Architecture
+##  Architecture
 
 - **Serverless Framework** - Infrastructure as Code (IaC)
 - **AWS Lambda** - Serverless compute for business logic
@@ -28,7 +28,7 @@ serverless-backend/
 └── README.md          # Project documentation
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
